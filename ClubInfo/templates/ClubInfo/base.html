@@ -1,0 +1,39 @@
+<head>
+{% load static %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'ClubInfo/styles.css' %}"/>
+</head>
+
+<title>{% block title %}CCA Programming -- {% endblock %}</title>
+
+<h1 style="text-align:center;">CCA Programming</h1>
+
+
+<navbar>
+    <div style="float:right">
+{% if user.is_authenticated %}
+ <a href="{% url 'clubinfo:logout' %}">Logout</a>
+{% else %}
+ <a href="{% url 'clubinfo:login' %}">Login</a>
+<a href="{% url 'clubinfo:register' %}">Register</a>
+
+{% endif %}
+    </div>
+<a href="{% url 'clubinfo:index' %}">Home</a>
+ {% if user.is_authenticated %}<a href="{% url 'clubinfo:profile' user.pk %}">Profile</a> {% endif %}
+    <a href="{% url 'clubinfo:contest_home' %}">Contests</a>
+</navbar>
+<hr>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <p {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                {% if 'safe' in message.tags %}{{ message|safe }} {% else %} {{ message }} {% endif %}
+            </p>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% block content %}
+
+{% endblock %}

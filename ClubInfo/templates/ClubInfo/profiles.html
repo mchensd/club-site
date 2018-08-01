@@ -1,0 +1,23 @@
+{% extends 'ClubInfo/base.html' %}
+
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+
+<p><h1>{{ user.first_name }} {{ user.last_name }}'s profile</h1></p>
+<table style="width:100%">
+    <tr>
+        <th>Contest Number</th>
+        <th>Contest Date</th>
+        <th>Score</th>
+    </tr>
+    {% for score in user.score_set.all %}
+        <tr>
+            <td><a href="{% url 'clubinfo:contest_details' score.contest.pk %}">{{ score.contest.name }}</a></td>
+            <td>{{ score.contest.date|date:"N d, Y" }}</td>
+            <td>{{ score.score }}/{{ score.contest.out_of }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "ClubInfo/base.html" %}
+
+{% block title %} {{ block.super }} Home {% endblock %}
+
+{% block content %}
+
+{% comment %}{% if request.session.undo %}
+    <a href="{% url 'clubinfo:undo_announcement' %}">undo</a>
+{% endif %}
+{% endcomment %}
+{% for ann in announcements %}
+    <h2>{{ ann.title }}</h2>
+
+    <small>
+        <p>
+        Published {{ ann.pub_date }} by {% include 'ClubInfo/render_user.html' with user=ann.author %}
+        {% if user.is_staff %}
+        <a style="color:red" href="{% url 'clubinfo:delete' ann.pk %}">Delete</a>
+        {% endif %}
+        </p>
+
+    </small>
+    <p>{{ ann.text }}</p>
+    <small>
+        <p>
+            <a href="{% url 'clubinfo:announcement' ann.pk %}">{{ ann.comment_set.count }} comment{{ ann.comment_set.count|pluralize }}</a>
+        </p>
+    </small>
+    <hr>
+{% endfor %}
+
+
+{% if user.is_staff %}
+    <div style="border: 3px solid red">
+    <h4 style="color:red">Admin Only</h4>
+    <form action="{% url 'clubinfo:index' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"/>
+    </form>
+        </div>
+{% endif %}
+{% endblock %}

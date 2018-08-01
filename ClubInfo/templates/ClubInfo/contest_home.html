@@ -1,0 +1,30 @@
+{% extends 'ClubInfo/base.html' %}
+
+{% block content %}
+    <h1>All Contests So Far</h1>
+	<table style="width:100%">
+        <tr>
+            <th>Contest Name
+            <th>Contest Date</th>
+            <th>Users Taken</th>
+        </tr>
+
+        {% for contest in contests %}
+        <tr>
+            <td>
+                <a href="{% url 'clubinfo:contest_details' contest.pk %}">{{ contest.name }}</a>
+                {% if user.is_staff %}
+                    <small><a href="{% url 'clubinfo:modify_contest' contest.pk %}" style="color:red">Modify</a></small>
+                {% endif %}
+            </td>
+            <td>{{ contest.date|date:"N d, Y" }}</td>
+            {#https://docs.djangoproject.com/en/2.0/ref/templates/builtins/#}
+            <td>{{ contest.score_set.count }}</td>
+        </tr>
+        {% endfor %}
+
+
+    </table>
+
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% extends 'ClubInfo/base.html' %}
+
+{% block content %}
+
+{# {% include 'ClubInfo/form_errors.html' %} #}
+
+{% if form.errors %}
+<p>Error</p>
+    {% for field in form.errors %}
+        <div>
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+    <h1>Modify Contest</h1>
+    <h2>Contest Details</h2>
+        <form action="{% url 'clubinfo:mod_contest_info' contest.pk %}" method="post">
+            {% csrf_token %}
+
+            {{ info_form.as_p }}
+            <input type="submit" name="info_update" value="Modify"/>
+
+        </form>
+
+
+    <h2>User Info</h2>
+        {# Remove a user from the contest #}
+        <h3>Remove a user</h3>
+        {% for score in contest.score_set.all %}
+            {% with user=score.taker %}
+            <p>{{ forloop.counter }}. {{ user.profile.full_name }} -- {{ user.username }} ({{ score.score }})</p>
+            <form action="{% url 'clubinfo:mod_contest_del_user' score.pk %}" method="post">
+                {% csrf_token %}
+                <input type="submit" name="user_delete" value="Delete User"/>
+            </form>
+            {% endwith %}
+        {% endfor %}
+
+        <h3>Add a User</h3>
+        {% for user in adduser_list %}
+            <p>{{ forloop.counter }}. {{ user.profile.full_name }} -- {{ user.username }}</p>
+            <form action="{% url 'clubinfo:mod_contest_add_user' user.pk contest.pk %}" method="post">
+                {% csrf_token %}
+                {{ adduser_form.as_p }}
+                <input type="submit" value="Add User"/>
+            </form>
+        {% endfor %}
+
+{% endblock %}

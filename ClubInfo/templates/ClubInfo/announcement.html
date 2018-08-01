@@ -1,0 +1,27 @@
+{% extends 'ClubInfo/base.html' %}
+
+{% block content %}
+<h2>{{ ann.title }}</h2>
+<p>{{ ann.text }}</p>
+
+<h3 style="margin: 50 0 0 0">Comments</h3>
+<hr>
+{% for comment in ann.comment_set.all %}
+    <div style="margin-left: 50px">
+    <p style="margin-bottom: 2px">{% include 'ClubInfo/render_user.html' with user=comment.author %}</p>
+        <small>On {{ comment.date }}</small>
+        <p>{{ comment.text }}</p>
+    <hr>
+    </div>
+{% endfor %}
+
+{% if perms.ClubInfo.add_comment %}
+    <form action="{% url 'clubinfo:announcement' ann.pk %}" method="post">
+        {% csrf_token %}
+        <p>{{ form.body }}</p>
+        <input type="hidden" name="ann_id" value="{{ ann.pk }}"/>
+        <input type="submit" value="Submit"/>
+    </form>
+{% endif %}
+
+{% endblock %}

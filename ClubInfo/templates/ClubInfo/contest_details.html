@@ -1,0 +1,22 @@
+{% extends 'ClubInfo/base.html' %}
+
+{% block content %}
+    <h1>Details for {{ contest.name }}</h1>
+    {% if user.is_staff %}<small><a href="{% url 'clubinfo:modify_contest' contest.pk %}" style="color:red">Modify</a></small>{% endif %}
+    <table>
+        <tr>
+            <th>Taker</th>
+            <th>Score</th>
+        </tr>
+        {% for score in contest.score_set.all %}
+            <tr>
+                <td>
+                    <a href="{% url 'clubinfo:profile' score.taker.pk %}">{{ score.taker.profile.full_name }}</a>
+
+                </td>
+                <td>{{ score.score }}/{{ contest.out_of }}</td>
+            </tr>
+
+        {% endfor %}
+    </table>
+{% endblock %}
